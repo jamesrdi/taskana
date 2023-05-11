@@ -44,7 +44,7 @@
     <version.json>20230227</version.json>
 
     <!-- build dependencies -->
-    <version.checkstyle>10.9.3</version.checkstyle>
+    <version.checkstyle>10.11.0</version.checkstyle>
     <version.google-java-format>1.16.0</version.google-java-format>
     <version.maven.checkstyle>3.2.2</version.maven.checkstyle>
     <version.maven.jar>3.3.0</version.maven.jar>
@@ -52,14 +52,14 @@
     <version.maven.source>3.2.1</version.maven.source>
     <version.maven.javadoc>3.4.1</version.maven.javadoc>
     <version.maven.resources>3.3.1</version.maven.resources>
-    <version.maven.surefire>3.0.0</version.maven.surefire>
+    <version.maven.surefire>3.1.0</version.maven.surefire>
     <version.maven.asciidoctor>2.2.3</version.maven.asciidoctor>
     <version.maven.clean>3.2.0</version.maven.clean>
     <version.maven.dependency>3.5.0</version.maven.dependency>
     <version.maven.sonar>3.9.1.2184</version.maven.sonar>
 
     <!-- release dependencies -->
-    <version.maven.gpg>3.0.1</version.maven.gpg>
+    <version.maven.gpg>3.1.0</version.maven.gpg>
     <version.sonatype>1.6.13</version.sonatype>
 
     <!-- spring dependencies -->
@@ -85,7 +85,7 @@
     <version.archunit>1.0.1</version.archunit>
     <version.equalsverifier>3.14.1</version.equalsverifier>
     <version.openpojo>0.9.1</version.openpojo>
-    <version.jacoco>0.8.9</version.jacoco>
+    <version.jacoco>0.8.10</version.jacoco>
     <version.slf4j-test>1.2.0</version.slf4j-test>
     <version.auto-restdocs>2.0.11</version.auto-restdocs>
     <version.testcontainers>1.18.0</version.testcontainers>
