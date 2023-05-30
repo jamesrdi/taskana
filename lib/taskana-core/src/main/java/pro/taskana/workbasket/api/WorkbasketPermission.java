@@ -20,5 +20,7 @@ public enum WorkbasketPermission {
   CUSTOM_9,
   CUSTOM_10,
   CUSTOM_11,
-  CUSTOM_12
+  CUSTOM_12,
+  READTASKS,
+  EDITTASKS
 }

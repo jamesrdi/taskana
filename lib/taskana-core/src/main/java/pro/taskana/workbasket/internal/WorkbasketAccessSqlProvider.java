@@ -36,7 +36,9 @@ public class WorkbasketAccessSqlProvider {
           Pair.of("PERM_CUSTOM_9", "#{workbasketAccessItem.permCustom9}"),
           Pair.of("PERM_CUSTOM_10", "#{workbasketAccessItem.permCustom10}"),
           Pair.of("PERM_CUSTOM_11", "#{workbasketAccessItem.permCustom11}"),
-          Pair.of("PERM_CUSTOM_12", "#{workbasketAccessItem.permCustom1}"));
+          Pair.of("PERM_CUSTOM_12", "#{workbasketAccessItem.permCustom1}"),
+          Pair.of("PERM_READTASKS", "#{workbasketAccessItem.permReadTasks}"),
+          Pair.of("PERM_EDITTASKS", "#{workbasketAccessItem.permEditTasks}"));
 
   private WorkbasketAccessSqlProvider() {}
 

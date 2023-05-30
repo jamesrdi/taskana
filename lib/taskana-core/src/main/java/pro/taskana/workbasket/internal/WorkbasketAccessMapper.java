@@ -36,6 +36,8 @@ public interface WorkbasketAccessMapper {
   @Result(property = "permCustom10", column = "PERM_CUSTOM_10")
   @Result(property = "permCustom11", column = "PERM_CUSTOM_11")
   @Result(property = "permCustom12", column = "PERM_CUSTOM_12")
+  @Result(property = "permReadTasks", column = "PERM_READTASKS")
+  @Result(property = "permEditTasks", column = "PERM_EDITTASKS")
   WorkbasketAccessItemImpl findById(@Param("id") String id);
 
   @SelectProvider(type = WorkbasketAccessSqlProvider.class, method = "findByWorkbasketId")
@@ -61,6 +63,8 @@ public interface WorkbasketAccessMapper {
   @Result(property = "permCustom10", column = "PERM_CUSTOM_10")
   @Result(property = "permCustom11", column = "PERM_CUSTOM_11")
   @Result(property = "permCustom12", column = "PERM_CUSTOM_12")
+  @Result(property = "permReadTasks", column = "PERM_READTASKS")
+  @Result(property = "permEditTasks", column = "PERM_EDITTASKS")
   List<WorkbasketAccessItemImpl> findByWorkbasketId(@Param("id") String id);
 
   @SelectProvider(type = WorkbasketAccessSqlProvider.class, method = "findByAccessId")
@@ -86,6 +90,8 @@ public interface WorkbasketAccessMapper {
   @Result(property = "permCustom10", column = "PERM_CUSTOM_10")
   @Result(property = "permCustom11", column = "PERM_CUSTOM_11")
   @Result(property = "permCustom12", column = "PERM_CUSTOM_12")
+  @Result(property = "permReadTasks", column = "PERM_READTASKS")
+  @Result(property = "permEditTasks", column = "PERM_EDITTASKS")
   List<WorkbasketAccessItemImpl> findByAccessId(@Param("id") String id);
 
   @InsertProvider(type = WorkbasketAccessSqlProvider.class, method = "insert")
@@ -128,6 +134,8 @@ public interface WorkbasketAccessMapper {
   @Result(property = "permCustom10", column = "PERM_CUSTOM_10")
   @Result(property = "permCustom11", column = "PERM_CUSTOM_11")
   @Result(property = "permCustom12", column = "PERM_CUSTOM_12")
+  @Result(property = "permReadTasks", column = "PERM_READTASKS")
+  @Result(property = "permEditTasks", column = "PERM_EDITTASKS")
   WorkbasketAccessItemImpl findByWorkbasketAndAccessId(
       @Param("workbasketId") String workbasketId, @Param("accessIds") List<String> accessIds);
 
@@ -154,6 +162,8 @@ public interface WorkbasketAccessMapper {
   @Result(property = "permCustom10", column = "PERM_CUSTOM_10")
   @Result(property = "permCustom11", column = "PERM_CUSTOM_11")
   @Result(property = "permCustom12", column = "PERM_CUSTOM_12")
+  @Result(property = "permReadTasks", column = "PERM_READTASKS")
+  @Result(property = "permEditTasks", column = "PERM_EDITTASKS")
   WorkbasketAccessItemImpl findByWorkbasketKeyDomainAndAccessId(
       @Param("workbasketKey") String workbasketKey,
       @Param("domain") String domain,

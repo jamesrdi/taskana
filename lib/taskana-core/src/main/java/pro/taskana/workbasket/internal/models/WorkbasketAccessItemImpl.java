@@ -30,6 +30,8 @@ public class WorkbasketAccessItemImpl implements WorkbasketAccessItem {
   private boolean permCustom10;
   private boolean permCustom11;
   private boolean permCustom12;
+  private boolean permReadTasks;
+  private boolean permEditTasks;
 
   public WorkbasketAccessItemImpl() {}
 
@@ -55,6 +57,8 @@ public class WorkbasketAccessItemImpl implements WorkbasketAccessItem {
     permCustom10 = copyFrom.permCustom10;
     permCustom11 = copyFrom.permCustom11;
     permCustom12 = copyFrom.permCustom12;
+    permReadTasks = copyFrom.permReadTasks;
+    permEditTasks = copyFrom.permEditTasks;
   }
 
   @Override
@@ -157,6 +161,12 @@ public class WorkbasketAccessItemImpl implements WorkbasketAccessItem {
       case CUSTOM_12:
         permCustom12 = value;
         break;
+      case READTASKS:
+        permReadTasks = value;
+        break;
+      case EDITTASKS:
+        permEditTasks = value;
+        break;
       default:
         throw new SystemException("Unknown permission '" + permission + "'");
     }
@@ -199,6 +209,10 @@ public class WorkbasketAccessItemImpl implements WorkbasketAccessItem {
         return permCustom11;
       case CUSTOM_12:
         return permCustom12;
+      case READTASKS:
+        return permReadTasks;
+      case EDITTASKS:
+        return permEditTasks;
       default:
         throw new SystemException("Unknown permission '" + permission + "'");
     }
@@ -340,6 +354,22 @@ public class WorkbasketAccessItemImpl implements WorkbasketAccessItem {
     this.permCustom12 = permCustom12;
   }
 
+  public boolean isPermReadTasks() {
+    return permReadTasks;
+  }
+
+  public void setPermReadTasks(boolean permReadTasks) {
+    this.permReadTasks = permReadTasks;
+  }
+
+  public boolean isPermEditTasks() {
+    return permEditTasks;
+  }
+
+  public void setPermEditTasks(boolean permEditTasks) {
+    this.permEditTasks = permEditTasks;
+  }
+
   @Override
   public WorkbasketAccessItemImpl copy() {
     return new WorkbasketAccessItemImpl(this);
@@ -369,7 +399,9 @@ public class WorkbasketAccessItemImpl implements WorkbasketAccessItem {
         permCustom9,
         permCustom10,
         permCustom11,
-        permCustom12);
+        permCustom12,
+        permReadTasks,
+        permEditTasks);
   }
 
   @Override
@@ -398,6 +430,8 @@ public class WorkbasketAccessItemImpl implements WorkbasketAccessItem {
         && permCustom10 == other.permCustom10
         && permCustom11 == other.permCustom11
         && permCustom12 == other.permCustom12
+        && permReadTasks == other.permReadTasks
+        && permEditTasks == other.permEditTasks
         && Objects.equals(id, other.id)
         && Objects.equals(workbasketId, other.workbasketId)
         && Objects.equals(workbasketKey, other.workbasketKey)
@@ -449,6 +483,10 @@ public class WorkbasketAccessItemImpl implements WorkbasketAccessItem {
         + this.permCustom11
         + ", permCustom12="
         + this.permCustom12
+        + ", permReadTasks="
+        + this.permReadTasks
+        + ", permEditTasks="
+        + this.permEditTasks
         + "]";
   }
 }
