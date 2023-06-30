@@ -26,6 +26,7 @@ import pro.taskana.task.api.models.Attachment;
 import pro.taskana.task.api.models.ObjectReference;
 import pro.taskana.task.api.models.Task;
 import pro.taskana.task.api.models.TaskComment;
+import pro.taskana.task.api.models.TaskSummary;
 import pro.taskana.workbasket.api.WorkbasketPermission;
 import pro.taskana.workbasket.api.exceptions.NotAuthorizedOnWorkbasketException;
 import pro.taskana.workbasket.api.exceptions.WorkbasketNotFoundException;
@@ -981,4 +982,12 @@ public interface TaskService {
    * @return a {@linkplain TaskCommentQuery}
    */
   TaskCommentQuery createTaskCommentQuery();
+
+  Task rerouteTask(String taskId)
+      throws NotAuthorizedOnWorkbasketException,
+          TaskNotFoundException,
+          WorkbasketNotFoundException,
+          InvalidTaskStateException;
+
+  List<TaskSummary> rerouteTasks(List<TaskSummary> taskSummaries);
 }

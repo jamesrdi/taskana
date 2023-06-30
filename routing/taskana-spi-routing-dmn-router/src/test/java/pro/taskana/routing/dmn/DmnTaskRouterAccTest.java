@@ -3,9 +3,11 @@ package pro.taskana.routing.dmn;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static pro.taskana.testapi.DefaultTestEntities.defaultTestClassification;
+import static pro.taskana.testapi.DefaultTestEntities.defaultTestObjectReference;
 import static pro.taskana.testapi.DefaultTestEntities.defaultTestWorkbasket;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,16 +19,19 @@ import pro.taskana.classification.api.ClassificationService;
 import pro.taskana.classification.api.models.ClassificationSummary;
 import pro.taskana.common.api.TaskanaEngine;
 import pro.taskana.common.api.exceptions.InvalidArgumentException;
+import pro.taskana.common.api.exceptions.SystemException;
 import pro.taskana.common.internal.InternalTaskanaEngine;
 import pro.taskana.spi.routing.api.TaskRoutingProvider;
 import pro.taskana.spi.routing.internal.TaskRoutingManager;
 import pro.taskana.task.api.TaskService;
 import pro.taskana.task.api.models.ObjectReference;
 import pro.taskana.task.api.models.Task;
+import pro.taskana.task.api.models.TaskSummary;
 import pro.taskana.testapi.TaskanaInject;
 import pro.taskana.testapi.TaskanaIntegrationTest;
 import pro.taskana.testapi.WithServiceProvider;
 import pro.taskana.testapi.builder.ObjectReferenceBuilder;
+import pro.taskana.testapi.builder.TaskBuilder;
 import pro.taskana.testapi.builder.UserBuilder;
 import pro.taskana.testapi.builder.WorkbasketAccessItemBuilder;
 import pro.taskana.testapi.builder.WorkbasketBuilder;
@@ -52,6 +57,7 @@ class DmnTaskRouterAccTest {
 
   ClassificationSummary defaultClassificationSummary;
   WorkbasketSummary defaultWorkbasketSummary;
+  ObjectReference defaultObjectReference;
 
   @WithAccessId(user = "businessadmin")
   @BeforeAll
@@ -60,6 +66,7 @@ class DmnTaskRouterAccTest {
     defaultClassificationSummary =
         defaultTestClassification().buildAndStoreAsSummary(classificationService);
     defaultWorkbasketSummary = defaultTestWorkbasket().buildAndStoreAsSummary(workbasketService);
+    defaultObjectReference = defaultTestObjectReference().build();
 
     createWorkbasketWithDomainA("GPK_KSC").buildAndStoreAsSummary(workbasketService);
     createWorkbasketWithDomainA("GPK_KSC_1").buildAndStoreAsSummary(workbasketService);
@@ -70,6 +77,8 @@ class DmnTaskRouterAccTest {
         .accessId("user-1-2")
         .permission(WorkbasketPermission.OPEN)
         .permission(WorkbasketPermission.READ)
+        .permission(WorkbasketPermission.READTASKS)
+        .permission(WorkbasketPermission.EDITTASKS)
         .permission(WorkbasketPermission.APPEND)
         .buildAndStore(workbasketService);
 
@@ -112,6 +121,57 @@ class DmnTaskRouterAccTest {
         .isInstanceOf(InvalidArgumentException.class)
         .extracting(Throwable::getMessage)
         .isEqualTo("Cannot create a Task outside a Workbasket");
+  }
+
+  @WithAccessId(user = "taskadmin")
+  @Test
+  void should_rerouteTask_When_porValueIsChanged() throws Exception {
+    Task task = createDefaultTask().buildAndStore(taskService, "admin");
+    assertThat(task.getWorkbasketKey()).isEqualTo(defaultWorkbasketSummary.getKey());
+    assertThat(task.getWorkbasketSummary().getDomain()).isEqualTo("DOMAIN_A");
+
+    task.setPrimaryObjRef(createObjectReference("company", null, null, "MyType1", "00000001"));
+    taskService.updateTask(task);
+    Task reroutedTask = taskService.rerouteTask(task.getId());
+
+    assertThat(reroutedTask.getWorkbasketKey()).isEqualTo("GPK_KSC");
+    assertThat(reroutedTask.getDomain()).isEqualTo("DOMAIN_A");
+  }
+
+  @WithAccessId(user = "user-1-2")
+  @Test
+  void should_NotRerouteTask_When_UserHasNoPermission() throws Exception {
+    Task task = createDefaultTask().buildAndStore(taskService, "admin");
+    assertThat(task.getWorkbasketKey()).isEqualTo(defaultWorkbasketSummary.getKey());
+    assertThat(task.getWorkbasketSummary().getDomain()).isEqualTo("DOMAIN_A");
+
+    task.setPrimaryObjRef(createObjectReference("company", null, null, "MyType1", "00000001"));
+    taskService.updateTask(task);
+
+    assertThatThrownBy(() -> taskService.rerouteTask(task.getId()))
+        .isInstanceOf(SystemException.class);
+    Task readTask = taskService.getTask(task.getId());
+    assertThat(readTask.getWorkbasketSummary().getId())
+        .isEqualTo(task.getWorkbasketSummary().getId());
+  }
+
+  @WithAccessId(user = "taskadmin")
+  @Test
+  void should_rerouteTasks_When_porValueIsChanged() throws Exception {
+    Task task1 = createDefaultTask().buildAndStore(taskService, "admin");
+    Task task2 = createDefaultTask().buildAndStore(taskService, "admin");
+    Task task3 = createDefaultTask().buildAndStore(taskService, "admin");
+    List<Task> tasks = Arrays.asList(task1, task2, task3);
+
+    for (Task task : tasks) {
+      task.setPrimaryObjRef(createObjectReference("company", null, null, "MyType1", "00000001"));
+      taskService.updateTask(task);
+    }
+    List<TaskSummary> taskSummaries =
+        taskService.createTaskQuery().idIn(task1.getId(), task2.getId(), task3.getId()).list();
+    List<TaskSummary> reroutedTasks = taskService.rerouteTasks(taskSummaries);
+    assertThat(reroutedTasks)
+        .allMatch(taskSummary -> "GPK_KSC".equals(taskSummary.getWorkbasketSummary().getKey()));
   }
 
   ObjectReference createObjectReference(
@@ -159,5 +219,12 @@ class DmnTaskRouterAccTest {
         .name("Megabasket")
         .type(WorkbasketType.GROUP)
         .orgLevel1("company");
+  }
+
+  private TaskBuilder createDefaultTask() {
+    return (TaskBuilder.newTask()
+            .workbasketSummary(defaultWorkbasketSummary)
+            .primaryObjRef(defaultObjectReference))
+        .classificationSummary(defaultClassificationSummary);
   }
 }

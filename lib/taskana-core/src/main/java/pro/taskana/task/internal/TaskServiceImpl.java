@@ -921,6 +921,54 @@ public class TaskServiceImpl implements TaskService {
     return terminatedTask;
   }
 
+  @Override
+  public Task rerouteTask(String taskId)
+      throws NotAuthorizedOnWorkbasketException,
+          TaskNotFoundException,
+          WorkbasketNotFoundException,
+          InvalidTaskStateException {
+    TaskImpl task;
+    try {
+      taskanaEngine.openConnection();
+      task = (TaskImpl) getTask(taskId);
+
+      WorkbasketSummary oldWorkbasketSummary = task.getWorkbasketSummary();
+
+      String newWorkbasketId = taskanaEngine.getTaskRoutingManager().determineWorkbasketId(task);
+
+      if (oldWorkbasketSummary.getId() != newWorkbasketId) {
+        task = (TaskImpl) transfer(taskId, newWorkbasketId, true);
+      }
+      return task;
+    } finally {
+      taskanaEngine.returnConnection();
+    }
+  }
+
+  @Override
+  public List<TaskSummary> rerouteTasks(List<TaskSummary> taskSummaries) {
+    try {
+      taskanaEngine.openConnection();
+      List<TaskSummary> reroutedTasks = List.of();
+      for (TaskSummary taskSummary : taskSummaries) {
+        try {
+          WorkbasketSummary oldWorkbasketSummary = taskSummary.getWorkbasketSummary();
+          String newWorkbasketId =
+              taskanaEngine.getTaskRoutingManager().determineWorkbasketId((Task) taskSummary);
+          if (oldWorkbasketSummary.getId() != newWorkbasketId) {
+            Task transferredTask = transfer(taskSummary.getId(), newWorkbasketId, true);
+            reroutedTasks.add(transferredTask);
+          }
+        } catch (Exception e) {
+          continue;
+        }
+      }
+      return reroutedTasks;
+    } finally {
+      taskanaEngine.returnConnection();
+    }
+  }
+
   public List<String> findTasksIdsAffectedByClassificationChange(String classificationId) {
     // tasks directly affected
     List<TaskSummary> tasksAffectedDirectly =
