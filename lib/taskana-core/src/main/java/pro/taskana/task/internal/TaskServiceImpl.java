@@ -21,6 +21,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pro.taskana.classification.api.ClassificationService;
@@ -46,6 +48,7 @@ import pro.taskana.spi.history.api.events.task.TaskClaimCancelledEvent;
 import pro.taskana.spi.history.api.events.task.TaskClaimedEvent;
 import pro.taskana.spi.history.api.events.task.TaskCompletedEvent;
 import pro.taskana.spi.history.api.events.task.TaskCreatedEvent;
+import pro.taskana.spi.history.api.events.task.TaskDeletedEvent;
 import pro.taskana.spi.history.api.events.task.TaskRequestChangesEvent;
 import pro.taskana.spi.history.api.events.task.TaskRequestReviewEvent;
 import pro.taskana.spi.history.api.events.task.TaskTerminatedEvent;
@@ -636,6 +639,8 @@ public class TaskServiceImpl implements TaskService {
       }
 
       if (!taskIds.isEmpty()) {
+        List<TaskSummary> deletedTasks =
+            createTaskQuery().idIn(taskIds.toArray(new String[0])).list();
         attachmentMapper.deleteMultipleByTaskIds(taskIds);
         objectReferenceMapper.deleteMultipleByTaskIds(taskIds);
         taskMapper.deleteMultiple(taskIds);
@@ -647,6 +652,9 @@ public class TaskServiceImpl implements TaskService {
                 .isDeleteHistoryEventsOnTaskDeletionEnabled()) {
           historyEventManager.deleteEvents(taskIds);
         }
+        if (historyEventManager.isEnabled()) {
+          deletedTasks.forEach(this::createTaskDeletedEvent);
+        }        
       }
       return bulkLog;
     } finally {
@@ -1627,6 +1635,10 @@ public class TaskServiceImpl implements TaskService {
         historyEventManager.deleteEvents(Collections.singletonList(taskId));
       }
 
+      if (historyEventManager.isEnabled()) {
+        createTaskDeletedEvent(task.asSummary());
+      }
+
       if (LOGGER.isDebugEnabled()) {
         LOGGER.debug("Task {} deleted.", taskId);
       }
@@ -2155,6 +2167,30 @@ public class TaskServiceImpl implements TaskService {
                     IdGenerator.generateWithPrefix(IdGenerator.ID_PREFIX_TASK_HISTORY_EVENT),
                     task,
                     taskanaEngine.getEngine().getCurrentUserContext().getUserid())));
+  }
+
+  private void createTaskDeletedEvent(TaskSummary taskSummary) {
+    TaskSummaryImpl emptyTaskSummary = new TaskSummaryImpl();
+    String changeDetails =
+        ObjectAttributeChangeDetector.determineChangesInAttributes(taskSummary, emptyTaskSummary);
+    JSONObject jsonObject = new JSONObject(changeDetails);
+    JSONArray changesArray = jsonObject.getJSONArray("changes");
+    for (int i = 0; i < changesArray.length(); i++) {
+      JSONObject changeObject = changesArray.getJSONObject(i);
+
+      if (changeObject.getString("fieldName").equals("state")) {
+        changeObject.put("newValue", "DELETED");
+      }
+    }
+    String modifiedChangeDetails = jsonObject.toString();
+    historyEventManager.createEvent(
+        new TaskDeletedEvent(
+            IdGenerator.generateWithPrefix(IdGenerator.ID_PREFIX_TASK_HISTORY_EVENT),
+            taskSummary,
+            taskSummary.getState().toString(),
+            "DELETED",
+            taskanaEngine.getEngine().getCurrentUserContext().getUserid(),
+            modifiedChangeDetails));
   }
 
   private TaskImpl duplicateTaskExactly(TaskImpl task) {
