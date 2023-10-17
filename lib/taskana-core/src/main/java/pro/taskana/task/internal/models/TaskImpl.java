@@ -276,6 +276,7 @@ public class TaskImpl extends TaskSummaryImpl implements Task {
     taskSummary.setDue(due);
     taskSummary.setId(id);
     taskSummary.setModified(modified);
+    taskSummary.setLockExpire(lockExpire);
     taskSummary.setName(name);
     taskSummary.setCreator(creator);
     taskSummary.setNote(note);
@@ -413,6 +414,8 @@ public class TaskImpl extends TaskSummaryImpl implements Task {
         + isRead
         + ", isTransferred="
         + isTransferred
+        + ", lockExpire="
+        + lockExpire
         + ", attachmentSummaries="
         + attachmentSummaries
         + ", custom1="

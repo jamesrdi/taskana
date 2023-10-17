@@ -67,6 +67,13 @@ public interface TaskSummary {
   Instant getModified();
 
   /**
+   * Returns the time when the {@linkplain Task} lock expire.
+   *
+   * @return the lock expire Instant
+   */
+  Instant getLockExpire();
+
+  /**
    * Returns the time when the {@linkplain Task} is planned to be executed.
    *
    * @return the planned Instant

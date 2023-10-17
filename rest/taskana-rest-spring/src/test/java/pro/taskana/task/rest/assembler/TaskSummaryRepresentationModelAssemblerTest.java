@@ -104,6 +104,7 @@ class TaskSummaryRepresentationModelAssemblerTest {
     task.setPrimaryObjRef(primaryObjRef);
     task.setRead(true);
     task.setTransferred(true);
+    task.setLockExpire(Instant.now());
     task.setGroupByCount(0);
     task.setCustom1("custom1");
     task.setCustom2("custom2");
@@ -179,6 +180,7 @@ class TaskSummaryRepresentationModelAssemblerTest {
     repModel.setOwnerLongName("ownerLongName");
     repModel.setRead(true);
     repModel.setTransferred(true);
+    repModel.setLockExpire(Instant.now());
     repModel.setGroupByCount(0);
     repModel.setCustom1("custom1");
     repModel.setCustom2("custom2");
@@ -278,6 +280,7 @@ class TaskSummaryRepresentationModelAssemblerTest {
     task.setPrimaryObjRef(primaryObjRef);
     task.setRead(true);
     task.setTransferred(true);
+    task.setLockExpire(Instant.now());
     task.setGroupByCount(0);
     task.setCustom1("custom1");
     task.setCustom2("custom2");

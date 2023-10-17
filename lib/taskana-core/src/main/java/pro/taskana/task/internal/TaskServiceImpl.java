@@ -1037,6 +1037,37 @@ public class TaskServiceImpl implements TaskService {
     return terminatedTask;
   }
 
+  @Override
+  public List<String> selectAndLock(List<String> taskIds) {
+    List<String> selectedTaskIds;
+    try{
+      taskanaEngine.openConnection();
+        if (taskIds == null) {
+          throw new InvalidArgumentException("List of TaskIds must not be null.");
+        }
+        selectedTaskIds = taskMapper.selectWithLockFalse(taskIds);
+        taskMapper.lockTask(selectedTaskIds);
+    } finally{
+      taskanaEngine.returnConnection();
+    }
+    return selectedTaskIds;
+  }
+
+  @Override
+  public List<String> selectAndUnlock(List<String> taskIds) {
+    List<String> selectedTaskIds;
+    try{
+      taskanaEngine.openConnection();
+      if (taskIds == null) {
+        throw new InvalidArgumentException("List of TaskIds must not be null.");
+      }
+      selectedTaskIds = taskMapper.selectWithLockTrue(taskIds);
+      taskMapper.unlockTask(selectedTaskIds);
+    } finally{
+      taskanaEngine.returnConnection();
+    }
+    return selectedTaskIds;
+  }
   public List<String> findTasksIdsAffectedByClassificationChange(String classificationId) {
     // tasks directly affected
     List<TaskSummary> tasksAffectedDirectly =
@@ -1847,6 +1878,7 @@ public class TaskServiceImpl implements TaskService {
     task.setModified(now);
     task.setRead(false);
     task.setTransferred(false);
+    task.setLockExpire(null);
 
     String creator = taskanaEngine.getEngine().getCurrentUserContext().getUserid();
     if (taskanaEngine.getEngine().getConfiguration().isSecurityEnabled() && creator == null) {

@@ -11,6 +11,7 @@ class TaskTestImpl extends TaskImpl {
   private boolean freezeModified = false;
   private boolean freezeRead = false;
   private boolean freezeTransferred = false;
+  private boolean freezeLockExpire = false;
   private boolean freezePriority = false;
 
   @Override
@@ -44,6 +45,17 @@ class TaskTestImpl extends TaskImpl {
 
   public void setModifiedIgnoreFreeze(Instant modified) {
     super.setModified(modified);
+  }
+
+  @Override
+  public void setLockExpire(Instant lockExpire) {
+    if (!freezeLockExpire) {
+      super.setLockExpire(lockExpire);
+    }
+  }
+
+  public void setLockExpireIgnoreFreeze(Instant lockExpire) {
+    super.setLockExpire(lockExpire);
   }
 
   @Override
@@ -117,6 +129,14 @@ class TaskTestImpl extends TaskImpl {
 
   public void unfreezeTransferred() {
     freezeTransferred = false;
+  }
+
+  public void freezeLockExpire() {
+    freezeLockExpire = true;
+  }
+
+  public void unfreezeLockExpire() {
+    freezeLockExpire = false;
   }
 
   public void freezePriority() {

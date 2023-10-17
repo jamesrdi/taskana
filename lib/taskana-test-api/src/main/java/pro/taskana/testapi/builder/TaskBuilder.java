@@ -67,6 +67,16 @@ public class TaskBuilder implements SummaryEntityBuilder<TaskSummary, Task, Task
     return this;
   }
 
+  public TaskBuilder lockExpire(Instant lockExpire) {
+    testTask.setLockExpireIgnoreFreeze(lockExpire);
+    if (lockExpire != null) {
+      testTask.freezeLockExpire();
+    } else {
+      testTask.unfreezeLockExpire();
+    }
+    return this;
+  }
+
   public TaskBuilder received(Instant received) {
     testTask.setReceived(received);
     return this;

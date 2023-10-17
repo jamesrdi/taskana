@@ -93,6 +93,7 @@ class TaskRepresentationModelAssemblerTest {
     repModel.setPrimaryObjRef(primaryObjRef);
     repModel.setRead(true);
     repModel.setTransferred(true);
+    repModel.setLockExpire(Instant.now());
     repModel.setCustomAttributes(List.of(TaskRepresentationModel.CustomAttribute.of("abc", "def")));
     repModel.setCallbackInfo(List.of(TaskRepresentationModel.CustomAttribute.of("ghi", "jkl")));
     repModel.setAttachments(List.of(attachment));
@@ -196,6 +197,7 @@ class TaskRepresentationModelAssemblerTest {
     task.setPrimaryObjRef(primaryObjRef);
     task.setRead(true);
     task.setTransferred(true);
+    task.setLockExpire(Instant.now());
     task.setGroupByCount(0);
     task.setCustomAttributeMap(Map.of("abc", "def"));
     task.setCallbackInfo(Map.of("ghi", "jkl"));
@@ -270,6 +272,7 @@ class TaskRepresentationModelAssemblerTest {
     task.setPrimaryObjRef(primaryObjRef);
     task.setRead(true);
     task.setTransferred(true);
+    task.setLockExpire(Instant.now());
     task.setGroupByCount(0);
     task.setCustomAttributeMap(Map.of("abc", "def"));
     task.setCallbackInfo(Map.of("ghi", "jkl"));

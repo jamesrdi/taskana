@@ -10,6 +10,7 @@ public enum TaskQueryColumnName implements QueryColumnName {
   CLAIMED("t.claimed"),
   COMPLETED("t.completed"),
   MODIFIED("t.modified"),
+  LOCK_EXPIRE("t.lock_expire"),
   PLANNED("t.planned"),
   RECEIVED("t.received"),
   DUE("t.due"),

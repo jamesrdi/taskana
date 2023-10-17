@@ -331,6 +331,8 @@ public class TaskQueryImpl implements TaskQuery {
   private Integer[] customInt8NotIn;
   private IntInterval[] customInt8Within;
   private IntInterval[] customInt8NotWithin;
+  private TimeInterval[] lockExpireWithin;
+  private TimeInterval[] lockExpireNotWithin;
   // endregion
   // region callbackState
   private CallbackState[] callbackStateIn;
@@ -508,6 +510,25 @@ public class TaskQueryImpl implements TaskQuery {
   @Override
   public TaskQuery orderByCompleted(SortDirection sortDirection) {
     return addOrderCriteria("COMPLETED", sortDirection);
+  }
+
+  @Override
+  public TaskQuery lockExpireWithin(TimeInterval... intervals) {
+    validateAllTimeIntervals(intervals);
+    this.lockExpireWithin = intervals;
+    return this;
+  }
+
+  @Override
+  public TaskQuery lockExpireNotWithin(TimeInterval... intervals) {
+    validateAllTimeIntervals(intervals);
+    this.lockExpireNotWithin = intervals;
+    return this;
+  }
+
+  @Override
+  public TaskQuery orderByLockExpire(SortDirection sortDirection) {
+    return addOrderCriteria("LOCK_EXPIRE", sortDirection);
   }
 
   @Override

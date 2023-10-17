@@ -312,6 +312,41 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
   TaskQuery orderByCompleted(SortDirection sortDirection);
 
   // endregion
+  // region lock_expire
+  /**
+   * Add the time intervals within which the task lock expires to your query. For each time interval,
+   * the database query will search for tasks whose created timestamp is after or at the interval's
+   * begin and before or at the interval's end. If more than one interval is specified, the query
+   * will connect them with the OR keyword. If either begin or end of an interval are null, these
+   * values will not be specified in the query.
+   *
+   * @param lockExpireWithin - the TimeIntervals within which the task expires
+   * @return the query
+   */
+  TaskQuery lockExpireWithin(TimeInterval... lockExpireWithin);
+
+  /**
+   * Exclude the time intervals within which the task lock does not expire from your query. For each time
+   * interval, the database query will search for tasks whose created timestamp is before the
+   * interval's begin and after the interval's end. If more than one interval is specified, the
+   * query will connect them with the OR keyword. If either begin or end of an interval are null,
+   * these values will not be specified in the query.
+   *
+   * @param lockExpireNotWithin - the TimeIntervals within which the task wasn't created
+   * @return the query
+   */
+  TaskQuery lockExpireNotWithin(TimeInterval... lockExpireNotWithin);
+
+  /**
+   * This method sorts the query result according to the lock expire timestamp.
+   *
+   * @param sortDirection Determines whether the result is sorted in ascending or descending order.
+   *     If sortDirection is null, the result is sorted in ascending order
+   * @return the query
+   */
+  TaskQuery orderByLockExpire(SortDirection sortDirection);
+
+  // endregion
   // region name
 
   /**

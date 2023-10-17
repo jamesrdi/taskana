@@ -29,6 +29,8 @@ public class TaskSummaryRepresentationModel
   protected Instant completed;
   /** The timestamp of the last modification. */
   protected Instant modified;
+  /** The lock expire timestamp in the system. */
+  protected Instant lockExpire;
   /**
    * Planned start of the task. The actual completion of the task should be between PLANNED and DUE.
    */
@@ -180,6 +182,14 @@ public class TaskSummaryRepresentationModel
 
   public void setModified(Instant modified) {
     this.modified = modified;
+  }
+
+  public Instant getLockExpire() {
+    return lockExpire;
+  }
+
+  public void setLockExpire(Instant lockExpire) {
+    this.lockExpire = lockExpire;
   }
 
   public Instant getPlanned() {

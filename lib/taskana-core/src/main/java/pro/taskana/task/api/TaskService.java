@@ -102,6 +102,7 @@ public interface TaskService {
    *   <li><b>{@linkplain Task#getState() state}</b> - {@linkplain TaskState#READY}
    *   <li><b>{@linkplain Task#isRead() isRead}</b> - false
    *   <li><b>{@linkplain Task#isTransferred() isTransferred}</b> - false
+   *   <li><b>{@linkplain Task#getLockExpire()} () lockExpire}</b> - null
    * </ul>
    *
    * @param taskToCreate the transient {@linkplain Task} to be inserted
@@ -1019,4 +1020,22 @@ public interface TaskService {
    * @return a {@linkplain TaskCommentQuery}
    */
   TaskCommentQuery createTaskCommentQuery();
+
+  /**
+   * Locks and returns a list {@linkplain String} of task Ids. If a corresponding {@linkplain Task}
+   * to a task Id is already locked, the task will not be locked again and will just be skipped.
+   *
+   * @param taskIds a list of {@linkplain String} of task Ids to be locked
+   * @return a list of {@linkplain String} of task Ids that are locked
+   */
+  List<String> selectAndLock(List<String> taskIds);
+
+  /**
+   * Unlocks and returns a list {@linkplain String} of task Ids. If a corresponding {@linkplain Task}
+   * to a task Id is already unlocked, the task will not be unlocked again and will just be skipped.
+   *
+   * @param taskIds a list of {@linkplain String} of task Ids to be unlocked
+   * @return a list of {@linkplain String} of task Ids that are unlocked
+   */
+  List<String> selectAndUnlock(List<String> taskIds);
 }

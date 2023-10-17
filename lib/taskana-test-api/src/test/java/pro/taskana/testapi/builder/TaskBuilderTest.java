@@ -132,6 +132,7 @@ class TaskBuilderTest {
             .manualPriority(7)
             .read(true)
             .transferred(true)
+            .lockExpire(null)
             .attachments(attachment)
             .customAttribute(TaskCustomField.CUSTOM_1, "custom1")
             .customAttribute(TaskCustomField.CUSTOM_2, "custom2")
@@ -183,6 +184,7 @@ class TaskBuilderTest {
     expectedTask.setManualPriority(7);
     expectedTask.setRead(true);
     expectedTask.setTransferred(true);
+    expectedTask.setLockExpire(null);
     expectedTask.setCreator("user-1-1");
     expectedTask.addAttachment(attachment);
     expectedTask.setCustomField(TaskCustomField.CUSTOM_1, "custom1");

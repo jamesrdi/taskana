@@ -373,7 +373,7 @@ public class TaskQuerySqlProvider {
         + "CUSTOM_3, CUSTOM_4, CUSTOM_5, CUSTOM_6, CUSTOM_7, CUSTOM_8, CUSTOM_9, CUSTOM_10, "
         + "CUSTOM_11, CUSTOM_12, CUSTOM_13, CUSTOM_14, CUSTOM_15, CUSTOM_16, "
         + "CUSTOM_INT_1, CUSTOM_INT_2, CUSTOM_INT_3,  CUSTOM_INT_4,  CUSTOM_INT_5, "
-        + "CUSTOM_INT_6, CUSTOM_INT_7, CUSTOM_INT_8"
+        + "CUSTOM_INT_6, CUSTOM_INT_7, CUSTOM_INT_8, LOCK_EXPIRE"
         + "<if test=\"addClassificationNameToSelectClauseForOrdering\">, CNAME</if>"
         + "<if test=\"addAttachmentClassificationNameToSelectClauseForOrdering\">, ACNAME</if>"
         + "<if test=\"addAttachmentColumnsToSelectClauseForOrdering\">"
@@ -626,6 +626,8 @@ public class TaskQuerySqlProvider {
     whereNotInInterval("dueNotWithin", "t.DUE", sb);
     whereInInterval("modifiedWithin", "t.MODIFIED", sb);
     whereNotInInterval("modifiedNotWithin", "t.MODIFIED", sb);
+    whereInInterval("lockExpireWithin", "t.LOCK_EXPIRE", sb);
+    whereNotInInterval("lockExpireNotWithin", "t.LOCK_EXPIRE", sb);
     whereInInterval("plannedWithin", "t.PLANNED", sb);
     whereNotInInterval("plannedNotWithin", "t.PLANNED", sb);
     whereInInterval("receivedWithin", "t.RECEIVED", sb);

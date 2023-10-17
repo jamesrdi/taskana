@@ -58,6 +58,7 @@ public class TaskSummaryRepresentationModelAssembler
     repModel.setClaimed(taskSummary.getClaimed());
     repModel.setCompleted(taskSummary.getCompleted());
     repModel.setModified(taskSummary.getModified());
+    repModel.setLockExpire(taskSummary.getLockExpire());
     repModel.setPlanned(taskSummary.getPlanned());
     repModel.setReceived(taskSummary.getReceived());
     repModel.setDue(taskSummary.getDue());
@@ -122,6 +123,7 @@ public class TaskSummaryRepresentationModelAssembler
     taskSummary.setClaimed(repModel.getClaimed());
     taskSummary.setCompleted(repModel.getCompleted());
     taskSummary.setModified(repModel.getModified());
+    taskSummary.setLockExpire(repModel.getLockExpire());
     taskSummary.setPlanned(repModel.getPlanned());
     taskSummary.setReceived(repModel.getReceived());
     taskSummary.setDue(repModel.getDue());

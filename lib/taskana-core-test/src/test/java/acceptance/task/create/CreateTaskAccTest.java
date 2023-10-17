@@ -180,6 +180,7 @@ class CreateTaskAccTest {
     assertThat(createdTask.getPrimaryObjRef()).isEqualTo(defaultObjectReference);
     assertThat(createdTask.getCreated()).isNotNull();
     assertThat(createdTask.getModified()).isNotNull();
+    assertThat(createdTask.getLockExpire()).isNotNull();
     assertThat(createdTask.getBusinessProcessId()).isNotNull();
     assertThat(createdTask.getClaimed()).isNull();
     assertThat(createdTask.getCompleted()).isNull();

@@ -27,6 +27,7 @@ public class TaskSummaryImpl implements TaskSummary {
   protected Instant created;
   protected Instant claimed;
   protected Instant modified;
+  protected Instant lockExpire;
   protected Instant planned;
   protected Instant due;
   protected Instant completed;
@@ -83,6 +84,7 @@ public class TaskSummaryImpl implements TaskSummary {
     claimed = copyFrom.claimed;
     completed = copyFrom.completed;
     modified = copyFrom.modified;
+    lockExpire = copyFrom.lockExpire;
     planned = copyFrom.planned;
     due = copyFrom.due;
     name = copyFrom.name;
@@ -197,6 +199,15 @@ public class TaskSummaryImpl implements TaskSummary {
   }
 
   @Override
+  public Instant getLockExpire() {
+    return lockExpire != null ? lockExpire.truncatedTo(ChronoUnit.MILLIS) : null;
+  }
+
+  public void setLockExpire(Instant lockExpire) {
+    this.lockExpire = lockExpire != null ? lockExpire.truncatedTo(ChronoUnit.MILLIS) : null;
+  }
+
+  @Override
   public Instant getPlanned() {
     return planned != null ? planned.truncatedTo(ChronoUnit.MILLIS) : null;
   }
@@ -217,6 +228,10 @@ public class TaskSummaryImpl implements TaskSummary {
   @Override
   public Integer getGroupByCount() {
     return this.groupByCount;
+  }
+
+  public void setGroupByCount(Integer n) {
+    groupByCount = n;
   }
 
   @Override
@@ -491,10 +506,6 @@ public class TaskSummaryImpl implements TaskSummary {
   // auxiliary method to allow mybatis access to workbasketSummary
   public void setWorkbasketSummaryImpl(WorkbasketSummaryImpl workbasketSummary) {
     setWorkbasketSummary(workbasketSummary);
-  }
-
-  public void setGroupByCount(Integer n) {
-    groupByCount = n;
   }
 
   public void addAttachmentSummary(AttachmentSummary attachmentSummary) {
@@ -789,6 +800,7 @@ public class TaskSummaryImpl implements TaskSummary {
         claimed,
         completed,
         modified,
+        lockExpire,
         planned,
         received,
         due,
@@ -853,6 +865,7 @@ public class TaskSummaryImpl implements TaskSummary {
         && manualPriority == other.manualPriority
         && isRead == other.isRead
         && isTransferred == other.isTransferred
+        && lockExpire == other.lockExpire
         && Objects.equals(id, other.id)
         && Objects.equals(externalId, other.externalId)
         && Objects.equals(created, other.created)
@@ -955,6 +968,8 @@ public class TaskSummaryImpl implements TaskSummary {
         + isRead
         + ", isTransferred="
         + isTransferred
+        + ", lockExpire="
+        + lockExpire
         + ", groupByCount="
         + groupByCount
         + ", attachmentSummaries="
