@@ -61,7 +61,7 @@ jobs:
           ./mvnw -B dependency:go-offline
           ./mvnw -B test -Dtest=GibtEsNet -Dsurefire.failIfNoSpecifiedTests=false
       - name: Upload taskana artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACTS_TASKANA_JARS_NAME }}
           path: ${{ env.ARTIFACTS_TASKANA_JARS_PATH }}
@@ -115,7 +115,7 @@ jobs:
       - name: Build maven artifact
         run: ./mvnw -B install -pl :taskana-web -am
       - name: Upload taskana-web dist artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACTS_TASKANA_WEB_NAME }}
           path: ${{ env.ARTIFACTS_TASKANA_WEB_PATH }}
@@ -228,7 +228,7 @@ jobs:
           npx wait-port -t 30000 localhost:8080 && yarn run e2e-standalone --spec "cypress/integration/monitor/**"
       - name: Upload Cypress tests
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACTS_CYPRESS_TESTS_NAME }}
           path: ${{ env.ARTIFACTS_CYPRESS_TESTS_PATH }}
@@ -297,6 +297,10 @@ jobs:
           - module: taskana-rest-spring-example-wildfly
             database: POSTGRES
     steps:
+      - name: Delete existing taskana artifacts
+        uses: actions/delete-artifact@v2
+        with:
+          name: ${{ env.ARTIFACTS_TASKANA_JARS_NAME }}
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Set up JDK ${{ env.JAVA_VERSION }}
@@ -328,7 +332,7 @@ jobs:
           DB: ${{ matrix.database }}
       - name: Upload JaCoCo Report
         if: matrix.database == 'H2'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACTS_JACOCO_REPORTS_NAME }}
           path: ${{ env.ARTIFACTS_JACOCO_REPORTS_PATH }}
