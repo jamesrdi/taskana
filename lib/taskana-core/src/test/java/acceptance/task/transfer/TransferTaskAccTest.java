@@ -3,6 +3,7 @@ package acceptance.task.transfer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 import acceptance.AbstractAccTest;
 import java.time.Instant;
@@ -29,6 +30,7 @@ import pro.taskana.task.api.exceptions.InvalidTaskStateException;
 import pro.taskana.task.api.exceptions.TaskNotFoundException;
 import pro.taskana.task.api.models.Task;
 import pro.taskana.task.api.models.TaskSummary;
+import pro.taskana.workbasket.api.WorkbasketPermission;
 import pro.taskana.workbasket.api.exceptions.NotAuthorizedOnWorkbasketException;
 import pro.taskana.workbasket.api.exceptions.WorkbasketNotFoundException;
 import pro.taskana.workbasket.api.models.Workbasket;
@@ -434,5 +436,27 @@ class TransferTaskAccTest extends AbstractAccTest {
             .list();
 
     assertThat(transferredTasks).extracting(TaskSummary::isTransferred).containsOnly(false);
+  }
+
+  @WithAccessId(user = "teamlead-1")
+  @Test
+  void should_SetOwner_When_TransferringTask() throws Exception {
+    taskService.transferWithOwner(
+        "TKI:000000000000000000000000000000000021",
+        "WBI:100000000000000000000000000000000005",
+        "teamlead-1");
+
+    Task transferredTask = taskService.getTask("TKI:000000000000000000000000000000000021");
+    assertThat(transferredTask.getOwner()).isEqualTo("teamlead-1");
+    ThrowingCallable call =
+        () ->
+            taskService.transfer(
+                "TKI:000000000000000000000000000000000021",
+                "WBI:100000000000000000000000000000000005");
+    NotAuthorizedOnWorkbasketException e =
+        catchThrowableOfType(call, NotAuthorizedOnWorkbasketException.class);
+    assertThat(e.getWorkbasketId()).isEqualTo("WBI:100000000000000000000000000000000005");
+    assertThat(e.getCurrentUserId()).isEqualTo("teamlead-1");
+    assertThat(e.getRequiredPermissions()).containsExactly(WorkbasketPermission.TRANSFER);
   }
 }

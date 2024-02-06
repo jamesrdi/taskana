@@ -554,6 +554,98 @@ public interface TaskService {
           InvalidTaskStateException;
 
   /**
+   * Transfers a {@linkplain Task} to another {@linkplain Workbasket} and set owner of task in the
+   * new workbasket to {@param owner} while always setting {@linkplain Task#isTransferred()
+   * isTransferred} to true.
+   *
+   * @see #transferWithOwner(String, String, String, boolean)
+   */
+  @SuppressWarnings("checkstyle:JavadocMethod")
+  default Task transferWithOwner(String taskId, String destinationWorkbasketId, String owner)
+      throws TaskNotFoundException,
+          WorkbasketNotFoundException,
+          NotAuthorizedOnWorkbasketException,
+          InvalidTaskStateException {
+    return transferWithOwner(taskId, destinationWorkbasketId, owner, true);
+  }
+
+  /**
+   * Transfers a {@linkplain Task} to another {@linkplain Workbasket} and set owner.
+   *
+   * <p>The transfer resets {@linkplain Task#isRead() isRead} and sets {@linkplain
+   * Task#isTransferred() isTransferred} if setTransferFlag is true.
+   *
+   * @param taskId the {@linkplain Task#getId() id} of the {@linkplain Task} which should be
+   *     transferred
+   * @param destinationWorkbasketId the {@linkplain Workbasket#getId() id} of the target {@linkplain
+   *     Workbasket}
+   * @param owner the owner of the transferred {@linkplain Task} in the new workbasket
+   * @param setTransferFlag controls whether to set {@linkplain Task#isTransferred() isTransferred}
+   *     to true or not
+   * @return the transferred {@linkplain Task}
+   * @throws TaskNotFoundException if the {@linkplain Task} with taskId wasn't found
+   * @throws WorkbasketNotFoundException if the target {@linkplain Workbasket} was not found
+   * @throws NotAuthorizedOnWorkbasketException if the current user has no {@linkplain
+   *     WorkbasketPermission#READ} for the source {@linkplain Workbasket} or no {@linkplain
+   *     WorkbasketPermission#TRANSFER} for the target {@linkplain Workbasket}
+   * @throws InvalidTaskStateException if the {@linkplain Task} is in one of the {@linkplain
+   *     TaskState#END_STATES}
+   */
+  Task transferWithOwner(
+      String taskId, String destinationWorkbasketId, String owner, boolean setTransferFlag)
+      throws TaskNotFoundException,
+          WorkbasketNotFoundException,
+          NotAuthorizedOnWorkbasketException,
+          InvalidTaskStateException;
+
+  /**
+   * Transfers a {@linkplain Task} to another {@linkplain Workbasket} and set owner of task in new
+   * workbasket to {@param owner} while always setting {@linkplain Task#isTransferred isTransferred}
+   * .
+   *
+   * @see #transferWithOwner(String, String, String, String, boolean)
+   */
+  @SuppressWarnings("checkstyle:JavadocMethod")
+  default Task transferWithOwner(String taskId, String workbasketKey, String domain, String owner)
+      throws TaskNotFoundException,
+          WorkbasketNotFoundException,
+          NotAuthorizedOnWorkbasketException,
+          InvalidTaskStateException {
+    return transferWithOwner(taskId, workbasketKey, domain, owner, true);
+  }
+
+  /**
+   * Transfers a {@linkplain Task} to another {@linkplain Workbasket} and set owner.
+   *
+   * <p>The transfer resets {@linkplain Task#isRead() isRead} and sets {@linkplain
+   * Task#isTransferred() isTransferred} if setTransferFlag is true.
+   *
+   * @param taskId the {@linkplain Task#getId() id} of the {@linkplain Task} which should be
+   *     transferred
+   * @param workbasketKey the {@linkplain Workbasket#getKey() key} of the target {@linkplain
+   *     Workbasket}
+   * @param domain the {@linkplain Workbasket#getDomain() domain} of the target {@linkplain
+   *     Workbasket}
+   * @param owner the owner of the transferred {@linkplain Task} in the new workbasket
+   * @param setTransferFlag controls whether to set {@linkplain Task#isTransferred() isTransferred}
+   *     or not
+   * @return the transferred {@linkplain Task}
+   * @throws TaskNotFoundException if the {@linkplain Task} with taskId was not found
+   * @throws WorkbasketNotFoundException if the target {@linkplain Workbasket} was not found
+   * @throws NotAuthorizedOnWorkbasketException if the current user has no {@linkplain
+   *     WorkbasketPermission#READ} for the source {@linkplain Workbasket} or no {@linkplain
+   *     WorkbasketPermission#TRANSFER} for the target {@linkplain Workbasket}
+   * @throws InvalidTaskStateException if the {@linkplain Task} is in one of the {@linkplain
+   *     TaskState#END_STATES}
+   */
+  Task transferWithOwner(
+      String taskId, String workbasketKey, String domain, String owner, boolean setTransferFlag)
+      throws TaskNotFoundException,
+          WorkbasketNotFoundException,
+          NotAuthorizedOnWorkbasketException,
+          InvalidTaskStateException;
+
+  /**
    * Transfers a List of {@linkplain Task Tasks} to another {@linkplain Workbasket} while always
    * setting {@linkplain Task#isTransferred isTransferred} to true.
    *

@@ -476,6 +476,27 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
+  public Task transferWithOwner(
+      String taskId, String destinationWorkbasketId, String owner, boolean setTransferFlag)
+      throws TaskNotFoundException,
+          WorkbasketNotFoundException,
+          NotAuthorizedOnWorkbasketException,
+          InvalidTaskStateException {
+    return taskTransferrer.transferWithOwner(
+        taskId, destinationWorkbasketId, owner, setTransferFlag);
+  }
+
+  @Override
+  public Task transferWithOwner(
+      String taskId, String workbasketKey, String domain, String owner, boolean setTransferFlag)
+      throws TaskNotFoundException,
+          WorkbasketNotFoundException,
+          NotAuthorizedOnWorkbasketException,
+          InvalidTaskStateException {
+    return taskTransferrer.transferWithOwner(taskId, workbasketKey, domain, owner, setTransferFlag);
+  }
+
+  @Override
   public Task setTaskRead(String taskId, boolean isRead)
       throws TaskNotFoundException, NotAuthorizedOnWorkbasketException {
     TaskImpl task;
