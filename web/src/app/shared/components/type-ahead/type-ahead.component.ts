@@ -9,7 +9,7 @@ import { WorkbasketSelectors } from '../../store/workbasket-store/workbasket.sel
 import { ButtonAction } from '../../../administration/models/button-action';
 
 @Component({
-  selector: 'taskana-shared-type-ahead',
+  selector: 'kadai-shared-type-ahead',
   templateUrl: './type-ahead.component.html',
   styleUrls: ['./type-ahead.component.scss']
 })

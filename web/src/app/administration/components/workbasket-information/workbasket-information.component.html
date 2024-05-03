@@ -23,9 +23,9 @@
                      (input)="validateInputOverflow(key, 64, $event)">
             </mat-form-field>
             <div *ngIf="inputOverflowMap.get(key.name)" class="error">{{lengthError}}</div>
-            <taskana-shared-field-error-display *ngIf="action != 3" [displayError]="!isFieldValid('workbasket.key')"
+            <kadai-shared-field-error-display *ngIf="action != 3" [displayError]="!isFieldValid('workbasket.key')"
                                                 [validationTrigger]="this.toggleValidationMap.get('workbasket.key')" errorMessage="* Key is required">
-            </taskana-shared-field-error-display>
+            </kadai-shared-field-error-display>
 
             <!-- NAME -->
             <mat-form-field appearance="outline">
@@ -35,28 +35,28 @@
                      [(ngModel)]="workbasket.name" name="workbasket.name" (input)="validateInputOverflow(name, 255)">
             </mat-form-field>
             <div *ngIf="inputOverflowMap.get(name.name)" class="error">{{lengthError}}</div>
-            <taskana-shared-field-error-display [displayError]="!isFieldValid('workbasket.name')"
+            <kadai-shared-field-error-display [displayError]="!isFieldValid('workbasket.name')"
                                                 [validationTrigger]="this.toggleValidationMap.get('workbasket.name')" errorMessage="* Name is required">
-            </taskana-shared-field-error-display>
+            </kadai-shared-field-error-display>
 
             <!-- OWNER -->
-            <taskana-shared-type-ahead *ngIf="lookupField else ownerInput"
+            <kadai-shared-type-ahead *ngIf="lookupField else ownerInput"
                                        [savedAccessId]="workbasket.owner"
                                        placeHolderMessage="Owner"
                                        [entityId]="workbasket.workbasketId"
                                        [displayError]="true"
                                        (isFormValid)="isOwnerValid = $event"
                                        (accessIdEventEmitter)="onSelectedOwner($event)">
-            </taskana-shared-type-ahead>
+            </kadai-shared-type-ahead>
 
             <ng-template #ownerInput>
               <input type="text" required maxlength="128" #owner="ngModel" class="form-control" id="wb-owner"
                      placeholder="Owner" [(ngModel)]="workbasket.owner" name="workbasket.owner"
                      (input)="validateInputOverflow(owner, 128)">
               <div *ngIf="inputOverflowMap.get(owner.name)" class="error">{{lengthError}}</div>
-              <taskana-shared-field-error-display [displayError]="!isFieldValid('workbasket.owner')"
+              <kadai-shared-field-error-display [displayError]="!isFieldValid('workbasket.owner')"
                                                   [validationTrigger]="this.toggleValidationMap.get('workbasket.owner')" errorMessage="* Owner is required">
-              </taskana-shared-field-error-display>
+              </kadai-shared-field-error-display>
             </ng-template>
 
             <!-- DESCRIPTION AND TYPE -->
@@ -67,12 +67,12 @@
                 <mat-label>Type</mat-label>
                 <mat-select [(value)]="this.workbasket.type">
                   <mat-select-trigger>
-                    <taskana-administration-icon-type [type]='workbasket.type'></taskana-administration-icon-type>
+                    <kadai-administration-icon-type [type]='workbasket.type'></kadai-administration-icon-type>
                     {{allTypes.get(workbasket.type)}}
                   </mat-select-trigger>
                   <mat-option *ngFor="let type of allTypes | mapValues | removeEmptyType" value="{{type.key}}">
-                    <taskana-administration-icon-type [type]='type.key' [text]="type.value">
-                    </taskana-administration-icon-type>
+                    <kadai-administration-icon-type [type]='type.key' [text]="type.value">
+                    </kadai-administration-icon-type>
                   </mat-option>
                 </mat-select>
               </mat-form-field>

@@ -95,7 +95,7 @@
 
   <!-- FURTHER FILTER OPTIONS -->
   <div *ngIf="(isFilterExpanded$ | async)" class="task-list-toolbar__additional-filter">
-    <taskana-shared-task-filter> </taskana-shared-task-filter>
+    <kadai-shared-task-filter> </kadai-shared-task-filter>
   </div>
 
 
@@ -110,9 +110,9 @@
 
 
     <!-- SORT TASKS BUTTON -->
-    <taskana-shared-sort
+    <kadai-shared-sort
       [sortingFields]="sortingFields" [defaultSortBy]="taskDefaultSortBy" (performSorting)="sorting($event)">
-    </taskana-shared-sort>
+    </kadai-shared-sort>
 
   </div>
 

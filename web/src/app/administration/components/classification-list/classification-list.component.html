@@ -12,9 +12,9 @@
       </button>
 
       <!-- IMPORT EXPORT BUTTONS -->
-      <taskana-administration-import-export
-        class="classification-list__import-export" [currentSelection]="taskanaType.CLASSIFICATIONS" [parentComponent]="'classifications'">
-      </taskana-administration-import-export>
+      <kadai-administration-import-export
+        class="classification-list__import-export" [currentSelection]="kadaiType.CLASSIFICATIONS" [parentComponent]="'classifications'">
+      </kadai-administration-import-export>
     </div>
 
     <!-- FILTER -->
@@ -52,18 +52,18 @@
       </div>
 
       <!-- TYPE FILTER -->
-      <taskana-administration-classification-types-selector
+      <kadai-administration-classification-types-selector
         class="pull-right">
-      </taskana-administration-classification-types-selector>
+      </kadai-administration-classification-types-selector>
 
     </div>
   </section>
 
 
   <!-- CLASSIFICATION TREE -->
-  <taskana-administration-tree *ngIf="(classifications && classifications.length) else empty_classifications"
+  <kadai-administration-tree *ngIf="(classifications && classifications.length) else empty_classifications"
                                [filterText]="inputValue" [filterIcon]="selectedCategory"
-                               (switchTaskanaSpinnerEmit)="setRequestInProgress($event)"></taskana-administration-tree>
+                               (switchKadaiSpinnerEmit)="setRequestInProgress($event)"></kadai-administration-tree>
   <ng-template #empty_classifications>
     <div *ngIf="!requestInProgress" class="classification-list__no-items">
       <h3 class="grey">There are no classifications</h3>

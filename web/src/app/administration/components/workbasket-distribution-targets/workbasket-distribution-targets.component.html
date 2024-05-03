@@ -83,7 +83,7 @@
        [ngClass]="sideBySide ? 'distribution-targets-list__lists--side' : 'distribution-targets-list__lists--single'">
 
     <!-- DISTRIBUTION TABLE-->
-    <taskana-administration-workbasket-distribution-targets-list
+    <kadai-administration-workbasket-distribution-targets-list
       [ngClass]="sideBySide ? 'distribution-targets-list__lists--left-side' : ''"
       header="Available distribution targets"
       [side]="sideEnum.AVAILABLE"
@@ -92,9 +92,9 @@
       [transferDistributionTargetObservable]="transferDistributionTargetObservable"
       id="dual-list-Left"
     >
-    </taskana-administration-workbasket-distribution-targets-list>
+    </kadai-administration-workbasket-distribution-targets-list>
 
-    <taskana-administration-workbasket-distribution-targets-list
+    <kadai-administration-workbasket-distribution-targets-list
       header="Selected distribution targets"
       [side]="sideEnum.SELECTED"
       [hidden]="displayingDistributionTargetsPicker && !sideBySide"
@@ -102,6 +102,6 @@
       [transferDistributionTargetObservable]="transferDistributionTargetObservable"
       id="dual-list-Right"
     >
-    </taskana-administration-workbasket-distribution-targets-list>
+    </kadai-administration-workbasket-distribution-targets-list>
   </div>
 </div>

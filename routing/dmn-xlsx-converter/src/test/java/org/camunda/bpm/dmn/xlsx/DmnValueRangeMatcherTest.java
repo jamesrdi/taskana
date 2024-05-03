@@ -15,7 +15,6 @@ package org.camunda.bpm.dmn.xlsx;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.regex.Matcher;
-import org.camunda.bpm.dmn.xlsx.DmnValueRangeConverter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 

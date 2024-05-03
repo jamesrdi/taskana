@@ -2,14 +2,14 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>pro.taskana</groupId>
-  <artifactId>taskana-parent</artifactId>
+  <groupId>io.kadai</groupId>
+  <artifactId>kadai-parent</artifactId>
   <version>8.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
-  <description>This pom is parent to all taskana modules and serves the common build.</description>
-  <url>http://taskana.pro</url>
+  <description>This pom is parent to all kadai modules and serves the common build.</description>
+  <url>http://kadai.pro</url>
 
   <developers>
     <developer>
@@ -21,9 +21,9 @@
   </developers>
 
   <scm>
-    <url>https://github.com/taskana/taskana/tree/master</url>
-    <connection>scm:git:git://github.com/taskana/taskana.git</connection>
-    <developerConnection>scm:git:ssh://github.com:taskana/taskana.git</developerConnection>
+    <url>https://github.com/kadai/kadai/tree/master</url>
+    <connection>scm:git:git://github.com/kadai/kadai.git</connection>
+    <developerConnection>scm:git:ssh://github.com:kadai/kadai.git</developerConnection>
   </scm>
 
   <licenses>
@@ -113,9 +113,9 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     <sonar.coverage.jacoco.xmlReportPaths>
-      ${project.basedir}/ci/taskana-sonar-test-coverage/target/site/jacoco-aggregate/jacoco.xml,
-      ${project.basedir}/../ci/taskana-sonar-test-coverage/target/site/jacoco-aggregate/jacoco.xml,
-      ${project.basedir}/../../ci/taskana-sonar-test-coverage/target/site/jacoco-aggregate/jacoco.xml
+      ${project.basedir}/ci/kadai-sonar-test-coverage/target/site/jacoco-aggregate/jacoco.xml,
+      ${project.basedir}/../ci/kadai-sonar-test-coverage/target/site/jacoco-aggregate/jacoco.xml,
+      ${project.basedir}/../../ci/kadai-sonar-test-coverage/target/site/jacoco-aggregate/jacoco.xml
     </sonar.coverage.jacoco.xmlReportPaths>
     <sonar.sources>src/main/java</sonar.sources>
     <sonar.tests>src/test/java</sonar.tests>
@@ -130,12 +130,12 @@
     <module>common</module>
     <module>lib</module>
     <!--
-      History is an optional module but used in taskana-rest-spring-example-wildfly
+      History is an optional module but used in kadai-rest-spring-example-wildfly
       because of that it must be build before the rest module
     -->
     <module>history</module>
     <module>rest</module>
-    <module>ci/taskana-sonar-test-coverage</module>
+    <module>ci/kadai-sonar-test-coverage</module>
     <module>routing</module>
   </modules>
 
@@ -394,8 +394,8 @@
           <verbose>true</verbose>
           <aspectLibraries>
             <aspectLibrary>
-              <groupId>pro.taskana</groupId>
-              <artifactId>taskana-common-logging</artifactId>
+              <groupId>io.kadai</groupId>
+              <artifactId>kadai-common-logging</artifactId>
             </aspectLibrary>
           </aspectLibraries>
         </configuration>

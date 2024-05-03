@@ -1,9 +1,9 @@
 <div class="workbasket-list">
   <!-- TOOLBAR -->
   <section #wbToolbar class="workbasket-list__toolbar">
-    <taskana-administration-workbasket-list-toolbar [workbaskets]="workbasketsSummary$ | async"
+    <kadai-administration-workbasket-list-toolbar [workbaskets]="workbasketsSummary$ | async"
       (performSorting)="performSorting($event)" [workbasketDefaultSortBy]="workbasketDefaultSortBy" [workbasketListExpanded]="expanded">
-    </taskana-administration-workbasket-list-toolbar>
+    </kadai-administration-workbasket-list-toolbar>
   </section>
 
   <!-- WORKBASKET LIST -->
@@ -20,7 +20,7 @@
 
           <!-- ICON -->
           <div class="workbasket-list__list-item--icon" *ngIf="expanded">
-            <taskana-administration-icon-type [type]="workbasket.type" size="large" tooltip="true" [selected]="workbasket.workbasketId === selectedId"></taskana-administration-icon-type>
+            <kadai-administration-icon-type [type]="workbasket.type" size="large" tooltip="true" [selected]="workbasket.workbasketId === selectedId"></kadai-administration-icon-type>
           </div>
 
           <!-- INFORMATION -->
@@ -56,11 +56,11 @@
 
 <!-- PAGINATION -->
 
-<taskana-shared-pagination
+<kadai-shared-pagination
         [page]="(workbasketsSummaryRepresentation$ | async) ? (workbasketsSummaryRepresentation$ | async)?.page : (workbasketsSummaryRepresentation$ | async)"
         [type]="type"
         [expanded]="expanded"
         [numberOfItems]="(workbasketsSummary$ | async)?.length"
         [resetPaging]="resetPagingSubject.asObservable()"
         (changePage)="changePage($event)">
-</taskana-shared-pagination>
+</kadai-shared-pagination>

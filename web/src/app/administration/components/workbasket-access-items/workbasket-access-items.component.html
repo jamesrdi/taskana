@@ -21,7 +21,7 @@
 				<thead>
 					<tr>
 						<th></th>
-            <th taskanaResizableWidth class="required-header test">AccessID</th>
+            <th kadaiResizableWidth class="required-header test">AccessID</th>
             <th class="rotated-th">
               <div><span>Select all</span></div>
             </th>
@@ -68,13 +68,13 @@
 							class="workbasket-access-items__typeahead" [ngClass]="{	'has-warning': (accessItemsClone[index].accessId !== accessItem.value.accessId),
                 							'has-error': !accessItem.value.accessId }">
 
-							<taskana-shared-type-ahead
+							<kadai-shared-type-ahead
                 [savedAccessId]="accessItem"
                 placeHolderMessage="Access id"
                 [displayError]="true"
                 [isRequired]="true"
                 (accessIdEventEmitter)="accessItemSelected($event, index)">
-							</taskana-shared-type-ahead>
+							</kadai-shared-type-ahead>
 						</td>
 
 						<ng-template #accessIdInput>

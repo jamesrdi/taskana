@@ -19,12 +19,12 @@
             <map />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$/history/taskana-simplehistory-rest-spring" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/history/kadai-simplehistory-rest-spring" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
     <method v="2">
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/rest/taskana-rest-spring/pom.xml" goal="clean validate " />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/rest/kadai-rest-spring/pom.xml" goal="clean validate " />
     </method>
   </configuration>
 </component>

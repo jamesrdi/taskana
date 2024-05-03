@@ -72,9 +72,9 @@
                        name="classification.key" (input)="validateInputOverflow(key, 32)">
               </mat-form-field>
               <div *ngIf="inputOverflowMap.get(key.name)" class="error">{{lengthError}}</div>
-              <!-- <taskana-shared-field-error-display [displayError]="key.invalid && key.dirty"
+              <!-- <kadai-shared-field-error-display [displayError]="key.invalid && key.dirty"
               errorMessage="* Key is required">
-              </taskana-shared-field-error-display> -->
+              </kadai-shared-field-error-display> -->
 
               <!-- NAME -->
               <mat-form-field appearance="outline">
@@ -87,9 +87,9 @@
               </mat-form-field>
               <div *ngIf="inputOverflowMap.get(name.name)" class="error">{{lengthError}}</div>
               <!--
-              <taskana-shared-field-error-display [displayError]="name.invalid && name.dirty"
+              <kadai-shared-field-error-display [displayError]="name.invalid && name.dirty"
                                                   errorMessage="* Name is required">
-              </taskana-shared-field-error-display> -->
+              </kadai-shared-field-error-display> -->
 
               <!-- DESCRIPTION -->
               <mat-form-field appearance="outline">
@@ -158,11 +158,11 @@
                            name="classification.priority" id="classification-priority" required min="0">
                   </mat-form-field>
 
-                  <taskana-shared-field-error-display
+                  <kadai-shared-field-error-display
                     [displayError]="!isFieldValid('classification.priority')"
                     [validationTrigger]="this.toggleValidationMap.get('classification.priority.name')"
                     errorMessage="* Priority is required">
-                  </taskana-shared-field-error-display>
+                  </kadai-shared-field-error-display>
                 </div>
               </div>
 

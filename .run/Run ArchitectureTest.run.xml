@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run ArchitectureTest" type="JUnit" factoryName="JUnit" folderName="lib">
-    <module name="taskana-core-test" />
+    <module name="kadai-core-test" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="pro.taskana.*" />
+        <option name="PATTERN" value="io.kadai.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

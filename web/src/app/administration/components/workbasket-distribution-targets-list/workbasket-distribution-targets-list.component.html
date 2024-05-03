@@ -30,8 +30,8 @@
   </mat-toolbar>
 
   <!-- FILTER COMPONENT -->
-  <taskana-shared-workbasket-filter *ngIf="toolbarState" [component]="component"
-                                    isExpanded="true"></taskana-shared-workbasket-filter>
+  <kadai-shared-workbasket-filter *ngIf="toolbarState" [component]="component"
+                                    isExpanded="true"></kadai-shared-workbasket-filter>
 
   <!-- EMPTY LIST -->
   <div *ngIf="distributionTargets?.length == 0 && requestInProgress < 0"
@@ -65,8 +65,8 @@
 
           <!-- ICON -->
           <div class="distribution-targets-list__item-icon">
-            <taskana-administration-icon-type [type]="workbasket.type" size="large"
-                                              tooltip="true"></taskana-administration-icon-type>
+            <kadai-administration-icon-type [type]="workbasket.type" size="large"
+                                              tooltip="true"></kadai-administration-icon-type>
           </div>
 
           <!-- INFO -->

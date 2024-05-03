@@ -3,7 +3,7 @@
   <!-- HEADER -->
   <div class="task-priority-report__header">
     <h4 class="task-priority-report__headline"> {{reportData?.meta.name}} ({{reportData?.meta.date | germanTimeFormat }}) </h4>
-    <taskana-monitor-task-priority-report-filter (applyFilter)="applyFilter($event)"> </taskana-monitor-task-priority-report-filter>
+    <kadai-monitor-task-priority-report-filter (applyFilter)="applyFilter($event)"> </kadai-monitor-task-priority-report-filter>
   </div>
 
   <mat-divider class="task-priority-report__divider"> </mat-divider>
@@ -19,7 +19,7 @@
       </div>
 
       <!-- CHART -->
-      <taskana-monitor-canvas [row]="row" [id]="indexToString(i)"> </taskana-monitor-canvas>
+      <kadai-monitor-canvas [row]="row" [id]="indexToString(i)"> </kadai-monitor-canvas>
 
       <!-- TABLE -->
       <div>

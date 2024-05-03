@@ -18,10 +18,10 @@ env:
 
   ARTIFACTS_CYPRESS_TESTS_NAME: cypress-tests
   ARTIFACTS_CYPRESS_TESTS_PATH: web/cypress
-  ARTIFACTS_TASKANA_JARS_NAME: taskana-jars
-  ARTIFACTS_TASKANA_JARS_PATH: ~/.m2/repository/pro/taskana
-  ARTIFACTS_TASKANA_WEB_NAME: taskana-web
-  ARTIFACTS_TASKANA_WEB_PATH: web/dist
+  ARTIFACTS_KADAI_JARS_NAME: kadai-jars
+  ARTIFACTS_KADAI_JARS_PATH: ~/.m2/repository/io/kadai
+  ARTIFACTS_KADAI_WEB_NAME: kadai-web
+  ARTIFACTS_KADAI_WEB_PATH: web/dist
   ARTIFACTS_JACOCO_REPORTS_NAME: jacoco-reports
   ARTIFACTS_JACOCO_REPORTS_PATH: "**/jacoco.exec"
 
@@ -60,20 +60,20 @@ jobs:
         run: |
           ./mvnw -B dependency:go-offline
           ./mvnw -B test -Dtest=GibtEsNet -Dsurefire.failIfNoSpecifiedTests=false
-      - name: Upload taskana artifacts
+      - name: Upload kadai artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_TASKANA_JARS_NAME }}
-          path: ${{ env.ARTIFACTS_TASKANA_JARS_PATH }}
+          name: ${{ env.ARTIFACTS_KADAI_JARS_NAME }}
+          path: ${{ env.ARTIFACTS_KADAI_JARS_PATH }}
           if-no-files-found: error
-      - name: Remove taskana artifacts from cache
-        run: rm -rf ${{ env.ARTIFACTS_TASKANA_JARS_PATH }}
+      - name: Remove kadai artifacts from cache
+        run: rm -rf ${{ env.ARTIFACTS_KADAI_JARS_PATH }}
       - name: Cancel workflow
         if: failure()
         uses: andymckay/cancel-action@0.4
 
   compile_frontend:
-    name: Compile taskana-web
+    name: Compile kadai-web
     runs-on: ubuntu-20.04
     steps:
       - name: Git checkout
@@ -101,7 +101,7 @@ jobs:
           key: ${{ runner.OS }}-${{ env.CACHE_MAVEN_FOR_WEB_NAME }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.OS }}-${{ env.CACHE_MAVEN_FOR_WEB_NAME }}
       - name: Populate maven cache
-        run: ./mvnw -B dependency:go-offline -pl :taskana-web -am
+        run: ./mvnw -B dependency:go-offline -pl :kadai-web -am
         if: steps.maven-cache.outputs.cache-hit != 'true'
       - name: Install Dependencies
         if: steps.web-cache.outputs.cache-hit != 'true'
@@ -113,22 +113,22 @@ jobs:
           yarn lint
           yarn build:prod
       - name: Build maven artifact
-        run: ./mvnw -B install -pl :taskana-web -am
-      - name: Upload taskana-web dist artifact
+        run: ./mvnw -B install -pl :kadai-web -am
+      - name: Upload kadai-web dist artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_TASKANA_WEB_NAME }}
-          path: ${{ env.ARTIFACTS_TASKANA_WEB_PATH }}
+          name: ${{ env.ARTIFACTS_KADAI_WEB_NAME }}
+          path: ${{ env.ARTIFACTS_KADAI_WEB_PATH }}
           if-no-files-found: error
-      - name: Remove taskana artifacts from cache
-        run: rm -rf ~/.m2/repository/pro/taskana
+      - name: Remove kadai artifacts from cache
+        run: rm -rf ~/.m2/repository/io/kadai
       - name: Cancel workflow
         if: failure()
         uses: andymckay/cancel-action@0.4
 
   test_frontend:
     runs-on: ubuntu-20.04
-    name: Test taskana-web
+    name: Test kadai-web
     needs: [ compile_frontend ]
     steps:
       - name: Git checkout
@@ -159,7 +159,7 @@ jobs:
       # Theoretically this step below not necessary because we reuse the cache from the 'compile_frontend' job.
       # Sometimes the cache is not created, therefore this is a fallback.
       - name: Populate cache
-        run: ./mvnw -B dependency:go-offline -pl :taskana-web -am
+        run: ./mvnw -B dependency:go-offline -pl :kadai-web -am
         if: steps.maven-cache.outputs.cache-hit != 'true'
       - name: Test
         working-directory: web
@@ -202,29 +202,29 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-${{ env.CACHE_MAVEN_NAME }}-${{ hashFiles('**/pom.xml') }}
-      - name: Download taskana artifacts
+      - name: Download kadai artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_TASKANA_JARS_NAME }}
-          path: ${{ env.ARTIFACTS_TASKANA_JARS_PATH }}
+          name: ${{ env.ARTIFACTS_KADAI_JARS_NAME }}
+          path: ${{ env.ARTIFACTS_KADAI_JARS_PATH }}
       - name: Change versions to match tag
         run: ci/change_version.sh -m .
         # Theoretically this step below not necessary because we reuse the cache from the 'compile_frontend' job.
         # Sometimes the cache is not created, therefore this is a fallback.
       - name: Populate cache
-        run: ./mvnw -B dependency:go-offline -pl :taskana-rest-spring-example-boot -am
+        run: ./mvnw -B dependency:go-offline -pl :kadai-rest-spring-example-boot -am
         if: steps.maven-cache.outputs.cache-hit != 'true'
-      - name: Download taskana-web dist artifact
+      - name: Download kadai-web dist artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_TASKANA_WEB_NAME }}
-          path: ${{ env.ARTIFACTS_TASKANA_WEB_PATH }}
+          name: ${{ env.ARTIFACTS_KADAI_WEB_NAME }}
+          path: ${{ env.ARTIFACTS_KADAI_WEB_PATH }}
       - name: Build frontend
-        run: ./mvnw install -pl :taskana-web
+        run: ./mvnw install -pl :kadai-web
       - name: Cypress tests
         working-directory: web
         run: |
-          ../mvnw -B spring-boot:run -P history.plugin -f .. -pl :taskana-rest-spring-example-boot &> /dev/null &
+          ../mvnw -B spring-boot:run -P history.plugin -f .. -pl :kadai-rest-spring-example-boot &> /dev/null &
           npx wait-port -t 30000 localhost:8080 && yarn run e2e-standalone --spec "cypress/integration/monitor/**"
       - name: Upload Cypress tests
         if: failure()
@@ -243,58 +243,58 @@ jobs:
     strategy:
       matrix:
         module:
-          - taskana-common
-          - taskana-common-security
-          - taskana-common-data
-          - taskana-common-logging
-          - taskana-common-test
-          - taskana-core
-          - taskana-core-test
-          - taskana-cdi
-          - taskana-cdi-example
-          - taskana-test-api
-          - taskana-spring
-          - taskana-spring-example
-          - taskana-spi-routing-dmn-router
-          - taskana-routing-rest
-          - taskana-rest-spring
-          - taskana-rest-spring-test-lib
-          - taskana-rest-spring-example-common
-          - taskana-loghistory-provider
-          - taskana-simplehistory-provider
-          - taskana-simplehistory-rest-spring
+          - kadai-common
+          - kadai-common-security
+          - kadai-common-data
+          - kadai-common-logging
+          - kadai-common-test
+          - kadai-core
+          - kadai-core-test
+          - kadai-cdi
+          - kadai-cdi-example
+          - kadai-test-api
+          - kadai-spring
+          - kadai-spring-example
+          - kadai-spi-routing-dmn-router
+          - kadai-routing-rest
+          - kadai-rest-spring
+          - kadai-rest-spring-test-lib
+          - kadai-rest-spring-example-common
+          - kadai-loghistory-provider
+          - kadai-simplehistory-provider
+          - kadai-simplehistory-rest-spring
         database:
           - H2
         include:
-          - module: taskana-core
+          - module: kadai-core
             database: POSTGRES
-          - module: taskana-core
+          - module: kadai-core
             database: DB2
-          - module: taskana-core
+          - module: kadai-core
             database: ORACLE
-          - module: taskana-core-test
+          - module: kadai-core-test
             database: POSTGRES
-          - module: taskana-core-test
+          - module: kadai-core-test
             database: DB2
-          - module: taskana-core-test
+          - module: kadai-core-test
             database: ORACLE
-          - module: taskana-test-api
+          - module: kadai-test-api
             database: POSTGRES
-          - module: taskana-test-api
+          - module: kadai-test-api
             database: DB2
-          - module: taskana-test-api
+          - module: kadai-test-api
             database: ORACLE
-          - module: taskana-simplehistory-provider
+          - module: kadai-simplehistory-provider
             database: DB2
-          - module: taskana-simplehistory-provider
+          - module: kadai-simplehistory-provider
             database: POSTGRES
-          - module: taskana-simplehistory-provider
+          - module: kadai-simplehistory-provider
             database: ORACLE
-          - module: taskana-rest-spring-example-boot
+          - module: kadai-rest-spring-example-boot
             database: DB2
-          - module: taskana-rest-spring-example-boot
+          - module: kadai-rest-spring-example-boot
             database: ORACLE
-          - module: taskana-rest-spring-example-wildfly
+          - module: kadai-rest-spring-example-wildfly
             database: POSTGRES
     steps:
       - name: Git checkout
@@ -310,18 +310,18 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-${{ env.CACHE_MAVEN_NAME }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-${{ env.CACHE_MAVEN_NAME }}
-      - name: Download taskana artifacts
+      - name: Download kadai artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_TASKANA_JARS_NAME }}
-          path: ${{ env.ARTIFACTS_TASKANA_JARS_PATH }}
+          name: ${{ env.ARTIFACTS_KADAI_JARS_NAME }}
+          path: ${{ env.ARTIFACTS_KADAI_JARS_PATH }}
       - name: Change versions to match tag
         run: |
           ci/change_version.sh -m .
-          ci/update_taskana_dependency_for_wildfly.sh
+          ci/update_kadai_dependency_for_wildfly.sh
       - name: Generate JavaDoc for Rest Documentation
-        if: matrix.module == 'taskana-simplehistory-rest-spring'
-        run: ./mvnw -B validate -pl :taskana-rest-spring
+        if: matrix.module == 'kadai-simplehistory-rest-spring'
+        run: ./mvnw -B validate -pl :kadai-rest-spring
       - name: Test
         run: ./mvnw -B verify -pl :${{matrix.module}} -Dcheckstyle.skip
         env:
@@ -340,7 +340,7 @@ jobs:
   release_artifacts:
     runs-on: ubuntu-22.04
     name: Release artifacts to OSS Sonatype
-    if: github.repository == 'Taskana/taskana' && ( startsWith(github.ref, 'refs/tags') || github.ref == 'refs/heads/master' ) && github.head_ref == ''
+    if: github.repository == 'Kadai/kadai' && ( startsWith(github.ref, 'refs/tags') || github.ref == 'refs/heads/master' ) && github.head_ref == ''
     needs: [ test_frontend, test_e2e, test_backend ]
     # as documented in the gpg manual (https://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPG_002dAGENT.html)
     # we should execute this command before interacting with gpg (otherwise gpg won't work)
@@ -367,16 +367,16 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-${{ env.CACHE_MAVEN_NAME }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-${{ env.CACHE_MAVEN_NAME }}
-      - name: Download taskana artifacts
+      - name: Download kadai artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_TASKANA_JARS_NAME }}
-          path: ${{ env.ARTIFACTS_TASKANA_JARS_PATH }}
-      - name: Download taskana-web dist artifact
+          name: ${{ env.ARTIFACTS_KADAI_JARS_NAME }}
+          path: ${{ env.ARTIFACTS_KADAI_JARS_PATH }}
+      - name: Download kadai-web dist artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_TASKANA_WEB_NAME }}
-          path: ${{ env.ARTIFACTS_TASKANA_WEB_PATH }}
+          name: ${{ env.ARTIFACTS_KADAI_WEB_NAME }}
+          path: ${{ env.ARTIFACTS_KADAI_WEB_PATH }}
       - name: Import GPG Key
         run: echo -n "$GPG_KEY" | base64 --decode | gpg --batch --import
         env:
@@ -387,13 +387,13 @@ jobs:
         run: |
           ./mvnw -B deploy -P $([[ "$GITHUB_REF" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "release" || echo "snapshot") \
           --settings ci/mvnsettings.xml -DskipTests -Dcheckstyle.skip -Dasciidoctor.skip -Djacoco.skip \
-          -pl :taskana-parent,\
-          :taskana-common-parent,:taskana-common-logging,:taskana-common,:taskana-common-security,\
-          :taskana-common-data,:taskana-common-test,\
-          :taskana-lib-parent,:taskana-core,:taskana-cdi,:taskana-spring,\
-          :taskana-rest-parent,:taskana-web,:taskana-rest-spring,\
-          :taskana-history-parent,:taskana-simplehistory-provider,:taskana-simplehistory-rest-spring,:taskana-loghistory-provider,\
-          :taskana-routing-parent,:taskana-spi-routing-dmn-router,:taskana-routing-rest
+          -pl :kadai-parent,\
+          :kadai-common-parent,:kadai-common-logging,:kadai-common,:kadai-common-security,\
+          :kadai-common-data,:kadai-common-test,\
+          :kadai-lib-parent,:kadai-core,:kadai-cdi,:kadai-spring,\
+          :kadai-rest-parent,:kadai-web,:kadai-rest-spring,\
+          :kadai-history-parent,:kadai-simplehistory-provider,:kadai-simplehistory-rest-spring,:kadai-loghistory-provider,\
+          :kadai-routing-parent,:kadai-spi-routing-dmn-router,:kadai-routing-rest
         env:
           GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
@@ -402,8 +402,8 @@ jobs:
       - name: Update version to next snapshot and push back
         run: |
           ci/change_version.sh -i -m .
-          ci/update_taskana_dependency_for_wildfly.sh -i
-          ci/commitPoms.sh rest/taskana-rest-spring-example-wildfly/src/test/java/pro/taskana/example/wildfly/AbstractAccTest.java
+          ci/update_kadai_dependency_for_wildfly.sh -i
+          ci/commitPoms.sh rest/kadai-rest-spring-example-wildfly/src/test/java/io/kadai/example/wildfly/AbstractAccTest.java
         env:
           GH_EMAIL: ${{ secrets.GH_EMAIL }}
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
@@ -414,7 +414,7 @@ jobs:
   deploy_to_azure:
     runs-on: ubuntu-20.04
     name: Deploy demo app to Microsoft Azure
-    if: github.repository == 'Taskana/taskana' && github.ref == 'refs/heads/master' && github.head_ref == ''
+    if: github.repository == 'Kadai/kadai' && github.ref == 'refs/heads/master' && github.head_ref == ''
     needs: [ test_frontend, test_e2e, test_backend ]
     steps:
       - name: Git checkout
@@ -430,24 +430,24 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-${{ env.CACHE_MAVEN_NAME }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-${{ env.CACHE_MAVEN_NAME }}
-      - name: Download taskana artifacts
+      - name: Download kadai artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_TASKANA_JARS_NAME }}
-          path: ${{ env.ARTIFACTS_TASKANA_JARS_PATH }}
-      - name: Download taskana-web dist artifact
+          name: ${{ env.ARTIFACTS_KADAI_JARS_NAME }}
+          path: ${{ env.ARTIFACTS_KADAI_JARS_PATH }}
+      - name: Download kadai-web dist artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_TASKANA_WEB_NAME }}
-          path: ${{ env.ARTIFACTS_TASKANA_WEB_PATH }}
-      - name: Build taskana-web
-        run: ./mvnw -B install -pl :taskana-web
+          name: ${{ env.ARTIFACTS_KADAI_WEB_NAME }}
+          path: ${{ env.ARTIFACTS_KADAI_WEB_PATH }}
+      - name: Build kadai-web
+        run: ./mvnw -B install -pl :kadai-web
       - name: Generate Javadoc
-        run: ./mvnw -B clean javadoc:jar -pl :taskana-core,:taskana-cdi,:taskana-spring
+        run: ./mvnw -B clean javadoc:jar -pl :kadai-core,:kadai-cdi,:kadai-spring
       - name: Generate Rest Documentation
-        run: ./mvnw -B test asciidoctor:process-asciidoc -Dtest=*DocTest -pl :taskana-rest-spring,:taskana-simplehistory-rest-spring,:taskana-routing-rest -Dcheckstyle.skip -Djacoco.skip
+        run: ./mvnw -B test asciidoctor:process-asciidoc -Dtest=*DocTest -pl :kadai-rest-spring,:kadai-simplehistory-rest-spring,:kadai-routing-rest -Dcheckstyle.skip -Djacoco.skip
       - name: Build Example Application
-        run: ./mvnw -B install -P history.plugin -P dmn-routing.plugin -pl :taskana-rest-spring-example-boot -DskipTests -Dcheckstyle.skip -Dmaven.javadoc.skip -Djacoco.skip
+        run: ./mvnw -B install -P history.plugin -P dmn-routing.plugin -pl :kadai-rest-spring-example-boot -DskipTests -Dcheckstyle.skip -Dmaven.javadoc.skip -Djacoco.skip
       - name: Verify Example Application contains documentation
         run: ci/verify_docs_jar.sh
       - name: Login to Microsoft Azure
@@ -457,8 +457,8 @@ jobs:
       - name: Deploy to Microsoft Azure
         uses: Azure/webapps-deploy@v3
         with:
-          app-name: taskana
-          package: rest/taskana-rest-spring-example-boot/target/taskana-rest-spring-example-boot.jar
+          app-name: kadai
+          package: rest/kadai-rest-spring-example-boot/target/kadai-rest-spring-example-boot.jar
       - name: Wait for Azure for 60 seconds
         uses: jakejarvis/wait-action@master
         with:
@@ -502,7 +502,7 @@ jobs:
         with:
           pattern: ${{ env.ARTIFACTS_JACOCO_REPORTS_NAME }}-*
           merge-multiple: true
-      - name: Install taskana
+      - name: Install kadai
         run: ./mvnw -B install -DskipTests -Dcheckstyle.skip -Dasciidoctor.skip -Dmaven.javadoc.skip
       - name: Upload SonarQube analysis
         run: ./mvnw -B sonar:sonar
