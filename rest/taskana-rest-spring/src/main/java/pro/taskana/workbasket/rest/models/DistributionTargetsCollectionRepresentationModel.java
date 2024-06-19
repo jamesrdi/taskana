@@ -3,6 +3,8 @@ package pro.taskana.workbasket.rest.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.beans.ConstructorProperties;
 import java.util.Collection;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import pro.taskana.common.rest.models.CollectionRepresentationModel;
 
 public class DistributionTargetsCollectionRepresentationModel
@@ -15,6 +17,7 @@ public class DistributionTargetsCollectionRepresentationModel
   }
 
   /** the embedded distribution targets. */
+  @Schema(name = "distributionTargets", description = "the embedded distribution targets.")
   @JsonProperty("distributionTargets")
   @Override
   public Collection<WorkbasketSummaryRepresentationModel> getContent() {

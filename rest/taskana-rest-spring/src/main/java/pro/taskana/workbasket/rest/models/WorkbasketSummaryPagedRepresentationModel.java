@@ -3,6 +3,8 @@ package pro.taskana.workbasket.rest.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.beans.ConstructorProperties;
 import java.util.Collection;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import pro.taskana.common.rest.models.PageMetadata;
 import pro.taskana.common.rest.models.PagedRepresentationModel;
 
@@ -16,6 +18,7 @@ public class WorkbasketSummaryPagedRepresentationModel
   }
 
   /** the embedded workbaskets. */
+  @Schema(name = "workbaskets", description = "the embedded workbaskets.")
   @JsonProperty("workbaskets")
   @Override
   public Collection<WorkbasketSummaryRepresentationModel> getContent() {

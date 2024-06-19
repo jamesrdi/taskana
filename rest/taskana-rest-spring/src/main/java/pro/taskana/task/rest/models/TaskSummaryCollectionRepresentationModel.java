@@ -3,6 +3,8 @@ package pro.taskana.task.rest.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.beans.ConstructorProperties;
 import java.util.Collection;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import pro.taskana.common.rest.models.CollectionRepresentationModel;
 
 public class TaskSummaryCollectionRepresentationModel
@@ -15,6 +17,7 @@ public class TaskSummaryCollectionRepresentationModel
   }
 
   /** The embedded tasks. */
+  @Schema(name = "tasks", description = "The embedded tasks.")
   @JsonProperty("tasks")
   @Override
   public Collection<TaskSummaryRepresentationModel> getContent() {

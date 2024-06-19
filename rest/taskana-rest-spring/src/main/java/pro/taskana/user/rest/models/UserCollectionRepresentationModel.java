@@ -3,6 +3,8 @@ package pro.taskana.user.rest.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.beans.ConstructorProperties;
 import java.util.Collection;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import pro.taskana.common.rest.models.CollectionRepresentationModel;
 
 public class UserCollectionRepresentationModel
@@ -13,6 +15,7 @@ public class UserCollectionRepresentationModel
   }
 
   /** The embedded users. */
+  @Schema(name = "users", description = "The embedded users.")
   @JsonProperty("users")
   @Override
   public Collection<UserRepresentationModel> getContent() {
